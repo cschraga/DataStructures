@@ -10,15 +10,14 @@
 
 @interface Heap : NSObject
 
-@property (nonatomic, nonnull, strong) NSMutableArray *values;
+@property (nonatomic, nonnull, strong) NSMutableArray *items;
 @property (nonatomic, assign) BOOL minHeap;
 
 - (nonnull id)initAsMinHeap;
 - (nonnull id)initAsMaxHeap;
-- (nonnull id)initMinHeapWithNSNumberArray: (nonnull NSArray *)array;
-- (nonnull id)initMaxHeapWithNSNumberArray: (nonnull NSArray *)array;
-- (nullable NSNumber *) extract;
-- (void) insertValue: (nonnull NSNumber *)value;
-- (void) printMe;
+- (nonnull id)initMinHeapWithNSArray: (nonnull NSArray *)array;
+- (nonnull id)initMaxHeapWithNSArray: (nonnull NSArray *)array;
+- (nullable NSObject *) extract;
+- (void) insert: (nonnull NSObject *)item;
 
 @end

@@ -7,6 +7,9 @@
 //
 
 #import "ViewController.h"
+#import "Heapable.h"
+#import "HeapableCar.h"
+#import "Heap.h"
 
 @interface ViewController ()
 
@@ -16,6 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     // Do any additional setup after loading the view, typically from a nib.
 }
 

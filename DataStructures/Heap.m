@@ -7,6 +7,7 @@
 //
 
 #import "Heap.h"
+#import "Heapable.h"
 
 @interface Heap ()
 
@@ -26,7 +27,7 @@
     self = [super init];
     
     if (self) {
-        _values = [[NSMutableArray alloc] init];
+        _items = [[NSMutableArray alloc] init];
         _minHeap = NO;
     }
     
@@ -37,7 +38,7 @@
     self = [super init];
     
     if (self) {
-        _values = [[NSMutableArray alloc] init];
+        _items = [[NSMutableArray alloc] init];
         _minHeap = NO;
     }
     
@@ -48,53 +49,56 @@
     self = [super init];
     
     if (self) {
-        _values = [[NSMutableArray alloc] init];
+        _items = [[NSMutableArray alloc] init];
         _minHeap = YES;
     }
     
     return self;
 }
 
--(id)initMinHeapWithNSNumberArray:(NSArray *)array {
+-(id)initMinHeapWithNSArray:(NSArray *)array {
     self = [self initAsMinHeap];
     
-    for (NSNumber *item in array) {
-        [self insertValue:item];
+    for (NSObject *item in array) {
+        if ([item conformsToProtocol:@protocol(Heapable)]) {
+            [self insert:item];
+        }
     }
     
     return self;
 }
 
--(id)initMaxHeapWithNSNumberArray:(NSArray *)array {
+-(id)initMaxHeapWithNSArray:(NSArray *)array {
     self = [self initAsMaxHeap];
     
-    for (NSNumber *item in array) {
-        [self insertValue:item];
+    for (NSObject *item in array) {
+        if ([item conformsToProtocol:@protocol(Heapable)]) {
+            [self insert:item];
+        }
     }
     
     return self;
-}
-
-- (void) printMe {
-    NSLog(@"This is my heap: %@", _values);
 }
 
 #pragma mark -- Public Methods
 
--(void) insertValue:(NSNumber *)value {
-    [_values addObject:value];
-    NSInteger index = _values.count - 1;
-    [self bubbleUpAtNode:index];
+-(void)insert:(NSObject *)item {
+    if ([item conformsToProtocol:@protocol(Heapable)]) {
+        [_items addObject:item];
+        NSInteger index = _items.count - 1;
+        [self bubbleUpAtNode:index];
+    }
 }
+
 
 -(NSNumber *)extract {
     NSNumber *result = [NSNumber numberWithInt:0];
-    if (_values.count > 0) {
-        result = _values[0];
-        if (_values.count > 1) {
-            NSInteger lastIndex = _values.count - 1;
+    if (_items.count > 0) {
+        result = _items[0];
+        if (_items.count > 1) {
+            NSInteger lastIndex = _items.count - 1;
             [self swapNode:0 withNode:lastIndex];
-            [_values removeObjectAtIndex:lastIndex];
+            [_items removeObjectAtIndex:lastIndex];
             [self bubbleDown];
         }
     }
@@ -123,12 +127,12 @@
             //find largest of children
             BOOL goLeft = YES;
             if (rightIndex) {
-                goLeft = [_values[leftIndex] compare:_values[rightIndex]] == NSOrderedDescending;
+                goLeft = [_items[leftIndex] compare:_items[rightIndex]] == NSOrderedDescending;
             }
             
             if (goLeft) {
                 
-                NSComparisonResult comparisonResult = [_values[currentNode] compare:_values[leftIndex]];
+                NSComparisonResult comparisonResult = [_items[currentNode] compare:_items[leftIndex]];
                 keepBubbling = (_minHeap) ? (comparisonResult == NSOrderedDescending) : (comparisonResult == NSOrderedAscending);
                 if (keepBubbling) {
                     //left node is wrong, swap and then repeat cycle
@@ -138,7 +142,7 @@
                 
             } else {
                 
-                NSComparisonResult comparisonResult = [_values[currentNode] compare:_values[rightIndex]];
+                NSComparisonResult comparisonResult = [_items[currentNode] compare:_items[rightIndex]];
                 keepBubbling = (_minHeap) ? (comparisonResult == NSOrderedDescending) : (comparisonResult == NSOrderedAscending);
                 
                 if (keepBubbling) {
@@ -183,7 +187,7 @@
         result = YES;
     } else {
         
-        NSComparisonResult comparisonResult = [_values[node] compare:_values[parentIndex]];
+        NSComparisonResult comparisonResult = [_items[node] compare:_items[parentIndex]];
         result = (_minHeap) ? (comparisonResult >= 0) : (comparisonResult <= 0);
         
     }
@@ -195,7 +199,7 @@
     NSNumber *result = [[NSNumber alloc] init];
     NSInteger sum = node * 2 + 1;
     
-    if (sum < (_values.count)) {
+    if (sum < (_items.count)) {
         result = [NSNumber numberWithInteger:sum];
     }
     
@@ -207,7 +211,7 @@
     NSNumber *result = [[NSNumber alloc] init];
     NSInteger sum = node * 2 + 2;
     
-    if (sum < (_values.count)) {
+    if (sum < (_items.count)) {
         result = [NSNumber numberWithInteger:sum];
     }
     
@@ -227,11 +231,11 @@
 }
 
 - (void) swapNode:(NSInteger)node1 withNode:(NSInteger)node2 {
-    if (node1 < _values.count && node2 < _values.count) {
-        NSNumber *val1 = _values[node1];
-        NSNumber *val2 = _values[node2];
-        _values[node2] = val1;
-        _values[node1] = val2;
+    if (node1 < _items.count && node2 < _items.count) {
+        NSNumber *val1 = _items[node1];
+        NSNumber *val2 = _items[node2];
+        _items[node2] = val1;
+        _items[node1] = val2;
     }
 }
 
