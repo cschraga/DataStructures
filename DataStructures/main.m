@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
-#import "Heap.h"
+#import "BinaryHeap.h"
 #import "HeapableCar.h"
 
 int main(int argc, char * argv[]) {
@@ -25,7 +25,7 @@ int main(int argc, char * argv[]) {
         HeapableCar *car9 = [HeapableCar carWithMake:@"Ford" andModel:@"F100" andPrice:@42100];
         HeapableCar *car10 = [HeapableCar carWithMake:@"Ford" andModel:@"Car" andPrice:@16060];
         
-        Heap *heap = [[Heap alloc] init];
+        BinaryHeap *heap = [[BinaryHeap alloc] init];
         [heap insert:car1];
         [heap insert:car2];
         [heap insert:car3];

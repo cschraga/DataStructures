@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Heap : NSObject
+@interface BinaryHeap : NSObject
 
 @property (nonatomic, nonnull, strong) NSMutableArray *items;
 @property (nonatomic, assign) BOOL minHeap;

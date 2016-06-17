@@ -6,7 +6,7 @@
 //  Copyright © 2016 Straight Edge Digital. All rights reserved.
 //
 
-#import "Heap.h"
+#import "BinaryHeap.h"
 #import "Heapable.h"
 
 @interface Heap ()
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation Heap
+@implementation BinaryHeap
 
 -(id)init {
     self = [super init];
