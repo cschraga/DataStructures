@@ -10,13 +10,15 @@
 
 @interface SinglyLinkedList : NSObject
 
-@property (nonatomic, nonnull, strong) NSMutableSet *set;
 @property (nonatomic, nullable, weak)  NSObject *firstNode;
+@property (nonatomic, nullable, weak)  NSObject *lastNode;
+@property (nonatomic, assign) BOOL circular;
 
+- (nullable id)initWithCircular: (BOOL)circular;
 - (nullable NSObject *) popFirstNode;
 - (void) insertAtBeginning: (nonnull NSObject *)object;
 - (void) insertObject: (nonnull NSObject *)object afterNode:(nonnull NSObject *)node;
 - (void) removeNode: (nonnull NSObject *)node;
-+ (nonnull SinglyLinkedList *) singlyLinkedList;
++ (nonnull SinglyLinkedList *) singlyLinkedListWithCircular: (BOOL)circular;
 
 @end

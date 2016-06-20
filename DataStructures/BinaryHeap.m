@@ -9,15 +9,10 @@
 #import "BinaryHeap.h"
 #import "Heapable.h"
 
-@interface Heap ()
+@interface BinaryHeap ()
 
-- (nullable NSNumber *) leftChildAtNode:  (NSInteger)node;
-- (nullable NSNumber *) rightChildAtNode: (NSInteger)node;
-- (nullable NSNumber *) parentAtNode:     (NSInteger)node;
-- (void) swapNode: (NSInteger)node1 withNode: (NSInteger)node2;
 - (void) bubbleDown;
-- (void) bubbleUpAtNode: (NSInteger)node;
-- (BOOL) isNodesParentCorrect:    (NSInteger)node;
+- (void) bubbleUp;
 
 @end
 
@@ -27,7 +22,6 @@
     self = [super init];
     
     if (self) {
-        _items = [[NSMutableArray alloc] init];
         _minHeap = NO;
     }
     
@@ -35,21 +29,13 @@
 }
 
 -(id)initAsMaxHeap {
-    self = [super init];
-    
-    if (self) {
-        _items = [[NSMutableArray alloc] init];
-        _minHeap = NO;
-    }
-    
-    return self;
+    return [self init];
 }
 
 -(id)initAsMinHeap {
-    self = [super init];
+    self = [self init];
     
     if (self) {
-        _items = [[NSMutableArray alloc] init];
         _minHeap = YES;
     }
     
@@ -61,7 +47,8 @@
     
     for (NSObject *item in array) {
         if ([item conformsToProtocol:@protocol(Heapable)]) {
-            [self insert:item];
+            NSObject <Treeable> *recastItem = (NSObject <Treeable> *)item;
+            [self insert:recastItem];
         }
     }
     
@@ -73,171 +60,124 @@
     
     for (NSObject *item in array) {
         if ([item conformsToProtocol:@protocol(Heapable)]) {
-            [self insert:item];
+            NSObject <Treeable> *recastItem = (NSObject <Treeable> *)item;
+            [self insert:recastItem];
         }
     }
     
     return self;
 }
 
-#pragma mark -- Public Methods
+#pragma mark -- Binary Tree Protocol Methods
 
--(void)insert:(NSObject *)item {
-    if ([item conformsToProtocol:@protocol(Heapable)]) {
-        [_items addObject:item];
-        NSInteger index = _items.count - 1;
-        [self bubbleUpAtNode:index];
-    }
+-(void)insert:(NSObject <Treeable> *)item {
+    [self setCurrentNodeIndexAsInt:[self treeSize]];
+    [self assignPosition:self.getCurrentNodeIndexAsInt toNode:item];
+    [self bubbleUp];
 }
 
-
--(NSNumber *)extract {
-    NSNumber *result = [NSNumber numberWithInt:0];
-    if (_items.count > 0) {
-        result = _items[0];
-        if (_items.count > 1) {
-            NSInteger lastIndex = _items.count - 1;
-            [self swapNode:0 withNode:lastIndex];
-            [_items removeObjectAtIndex:lastIndex];
+-(NSObject <Treeable> *) extract {
+    NSObject <Treeable> *result = nil;
+    NSInteger lastIndex = [self treeSize] - 1;
+    
+    if (lastIndex >= 0) {
+        [self setCurrentNodeIndexAsInt:0];
+        result = [self currentNode];
+        
+        if (lastIndex >= 1) {
+            [self swapNodesFromIndex:0 toIndex:lastIndex];
+            [self removeBottomNode];
             [self bubbleDown];
+        } else {
+            [self removeBottomNode];
         }
+        
+        
     }
     return result;
 }
+
 
 #pragma mark -- Bubble Operations
 
 - (void) bubbleDown {
     
-    BOOL keepBubbling = YES;  //switch to NO when node is correctly placed
-    NSInteger currentNode = 0; //keeps track of which node we're working with
+    NSNumber *swapWithMeIndex = nil;
     
-    while (keepBubbling) {
+    //1) if at end of heap, stop
+    if (![self leftChildAtCurrentNode] && ![self rightChildAtCurrentNode]) {
+        NSLog(@"Bubble Down Complete");
         
-        NSInteger leftIndex  = [[self leftChildAtNode:currentNode]  integerValue];
-        NSInteger rightIndex = [[self rightChildAtNode:currentNode] integerValue];
+    } else if ([self leftChildAtCurrentNode] && ![self rightChildAtCurrentNode]){
+        //2) if no right child, swap with left if its smaller
         
-        //1) if at end of heap, stop
-        if (!leftIndex && !rightIndex) {
-            
-            keepBubbling = NO;
-            
+        NSComparisonResult compareResult = [[self currentNode] compareTreeValueToObject:[self leftChildAtCurrentNode]];
+        BOOL swap = compareResult == (_minHeap) ? NSOrderedAscending : NSOrderedDescending;
+        swapWithMeIndex = (swap) ? [NSNumber numberWithInteger:[self leftChildIndexAtCurrentNode]] : nil;
+        
+    } else {
+        //3) if has both children..
+        NSComparisonResult compareResultLeft = [[self currentNode] compareTreeValueToObject:[self leftChildAtCurrentNode]];
+        NSComparisonResult compareResultRight = [[self currentNode] compareTreeValueToObject:[self rightChildAtCurrentNode]];
+        
+        //3a) stop if parent larger than both children
+        BOOL stop = (_minHeap) ? (compareResultLeft == NSOrderedAscending &&
+                                  compareResultRight == NSOrderedAscending) :
+                                 (compareResultLeft == NSOrderedDescending &&
+                                  compareResultRight == NSOrderedDescending );
+        
+        if (stop) {
+             NSLog(@"Bubble Down Complete");
         } else {
             
-            //find largest of children
-            BOOL goLeft = YES;
-            if (rightIndex) {
-                goLeft = [_items[leftIndex] compare:_items[rightIndex]] == NSOrderedDescending;
-            }
-            
-            if (goLeft) {
+            //3b) else, swap with the bigger child (in max heap)
+            NSComparisonResult compareResultChildren = [[self leftChildAtCurrentNode] compareTreeValueToObject:[self rightChildAtCurrentNode]];
+            if (_minHeap) {
                 
-                NSComparisonResult comparisonResult = [_items[currentNode] compare:_items[leftIndex]];
-                keepBubbling = (_minHeap) ? (comparisonResult == NSOrderedDescending) : (comparisonResult == NSOrderedAscending);
-                if (keepBubbling) {
-                    //left node is wrong, swap and then repeat cycle
-                    [self swapNode:currentNode withNode: leftIndex];
-                    currentNode = leftIndex;
-                }
+                swapWithMeIndex = (compareResultChildren == NSOrderedAscending) ? [NSNumber numberWithInteger:[self leftChildIndexAtCurrentNode]] : [NSNumber numberWithInteger:[self rightChildIndexAtCurrentNode]];
                 
             } else {
                 
-                NSComparisonResult comparisonResult = [_items[currentNode] compare:_items[rightIndex]];
-                keepBubbling = (_minHeap) ? (comparisonResult == NSOrderedDescending) : (comparisonResult == NSOrderedAscending);
-                
-                if (keepBubbling) {
-                    
-                    //right node is wrong, swap and repeat cycle
-                    [self swapNode:currentNode withNode: rightIndex];
-                    currentNode = rightIndex;
-                }
-                
+                swapWithMeIndex = (compareResultChildren == NSOrderedDescending) ? [NSNumber numberWithInteger:[self leftChildIndexAtCurrentNode]] : [NSNumber numberWithInteger:[self rightChildIndexAtCurrentNode]];
             }
             
         }
-        
+    }
+    
+    if (swapWithMeIndex) {
+        [self swapNodesFromIndex:[self getCurrentNodeIndexAsInt] toIndex:swapWithMeIndex.integerValue];
+        [self setCurrentNodeIndexAsInt:swapWithMeIndex.integerValue];
+        [self bubbleDown];
     }
     
 }
 
-- (void) bubbleUpAtNode:(NSInteger)node {
+- (void) bubbleUp {
     
-    BOOL keepLooping = YES;  //switch to NO when node is correctly placed
-    NSInteger currentNode = node; //keeps track of which node we're working with
-    
-    while (keepLooping) {
-        keepLooping = ![self isNodesParentCorrect:currentNode];  //keep looping if parent is wrong
-        if (keepLooping) {
-            NSInteger parentNode = [[self parentAtNode:currentNode] integerValue];
-            [self swapNode:currentNode withNode: parentNode];
-            currentNode = parentNode;
-        }
-    }
-    
-    
-}
-
-#pragma mark -- Node Evaluators
-
-- (BOOL) isNodesParentCorrect:(NSInteger)node {
-    BOOL result = NO;
-    NSInteger parentIndex = [[self parentAtNode:node] integerValue];
-    
-    if (node == 0) {
-        result = YES;
+    //if we're at the parent node, stop
+    if ([self getCurrentNodeIndexAsInt] == 0) {
+        NSLog(@"stop bubbling up ,we're at the top index");
     } else {
         
-        NSComparisonResult comparisonResult = [_items[node] compare:_items[parentIndex]];
-        result = (_minHeap) ? (comparisonResult >= 0) : (comparisonResult <= 0);
+        //if parent value is correct with respect to current node, stop
+        NSComparisonResult compareResult = [[self parentAtCurrentNode] compareTreeValueToObject:[self currentNode]];
+        BOOL correct = (_minHeap) ? compareResult == NSOrderedAscending : compareResult == NSOrderedDescending;
+        
+        
+        //else switch parent and child and recurse
+        if (!correct) {
+            NSInteger parentNodeIndex = [self parentIndexAtCurrentNode];
+            [self swapNodesFromIndex:[self getCurrentNodeIndexAsInt] toIndex:parentNodeIndex];
+            [self setCurrentNodeIndexAsInt:parentNodeIndex];
+            [self bubbleUp];
+        }
         
     }
     
-    return result;
-}
-
-- (NSNumber *) leftChildAtNode:(NSInteger)node {
-    NSNumber *result = [[NSNumber alloc] init];
-    NSInteger sum = node * 2 + 1;
     
-    if (sum < (_items.count)) {
-        result = [NSNumber numberWithInteger:sum];
-    }
-    
-    return result;
 }
 
 
-- (NSNumber *) rightChildAtNode:(NSInteger)node {
-    NSNumber *result = [[NSNumber alloc] init];
-    NSInteger sum = node * 2 + 2;
-    
-    if (sum < (_items.count)) {
-        result = [NSNumber numberWithInteger:sum];
-    }
-    
-    return result;
-}
-
-
-- (NSNumber *) parentAtNode:(NSInteger)node {
-    NSNumber *result = [[NSNumber alloc] init];
-    
-    if (node > 0) {
-        NSInteger sum = (node - 1) / 2;
-        result = [NSNumber numberWithInteger:sum];
-    }
-    
-    return result;
-}
-
-- (void) swapNode:(NSInteger)node1 withNode:(NSInteger)node2 {
-    if (node1 < _items.count && node2 < _items.count) {
-        NSNumber *val1 = _items[node1];
-        NSNumber *val2 = _items[node2];
-        _items[node2] = val1;
-        _items[node1] = val2;
-    }
-}
 
 
 @end

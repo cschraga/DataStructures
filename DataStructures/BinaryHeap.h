@@ -7,17 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BinaryTree.h"
+#import "BinaryTreeProtocol.h"
 
-@interface BinaryHeap : NSObject
+@interface BinaryHeap : BinaryTree <BinaryTreeProtocol>
 
-@property (nonatomic, nonnull, strong) NSMutableArray *items;
 @property (nonatomic, assign) BOOL minHeap;
 
 - (nonnull id)initAsMinHeap;
 - (nonnull id)initAsMaxHeap;
 - (nonnull id)initMinHeapWithNSArray: (nonnull NSArray *)array;
 - (nonnull id)initMaxHeapWithNSArray: (nonnull NSArray *)array;
-- (nullable NSObject *) extract;
-- (void) insert: (nonnull NSObject *)item;
 
 @end

@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "BinaryHeap.h"
 #import "HeapableCar.h"
+#import "SinglyLinkedList.h"
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
@@ -37,7 +38,23 @@ int main(int argc, char * argv[]) {
         [heap insert:car9];
         [heap insert:car10];
         
+        [heap extract];
         
+        SinglyLinkedList *linkedList = [SinglyLinkedList singlyLinkedListWithCircular:true];
+        [linkedList insertAtBeginning: car1];
+        [linkedList insertAtBeginning: car2];
+        [linkedList insertAtBeginning: car3];
+        [linkedList insertAtBeginning: car4];
+        [linkedList insertAtBeginning: car5];
+        [linkedList insertAtBeginning: car6];
+        [linkedList insertAtBeginning: car7];
+        [linkedList insertAtBeginning: car8];
+        [linkedList insertAtBeginning: car9];
+        [linkedList insertAtBeginning: car10];
+        
+        HeapableCar *car = (HeapableCar *)[linkedList popFirstNode];
+        
+        NSLog(@"poop");
         
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

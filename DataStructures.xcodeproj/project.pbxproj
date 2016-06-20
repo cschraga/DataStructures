@@ -17,6 +17,7 @@
 		F3866F8D1D13736A00D1E017 /* BinaryHeap.m in Sources */ = {isa = PBXBuildFile; fileRef = F3866F8C1D13736A00D1E017 /* BinaryHeap.m */; };
 		F3866F971D1476CC00D1E017 /* HeapableCar.m in Sources */ = {isa = PBXBuildFile; fileRef = F3866F961D1476CC00D1E017 /* HeapableCar.m */; };
 		F3866F9B1D1486B300D1E017 /* SinglyLinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = F3866F9A1D1486B300D1E017 /* SinglyLinkedList.m */; };
+		F3866FA01D171BBE00D1E017 /* BinaryTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F3866F9F1D171BBE00D1E017 /* BinaryTree.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,12 +46,15 @@
 		F3866F821D13735100D1E017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3866F8B1D13736A00D1E017 /* BinaryHeap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryHeap.h; sourceTree = "<group>"; };
 		F3866F8C1D13736A00D1E017 /* BinaryHeap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BinaryHeap.m; sourceTree = "<group>"; };
-		F3866F901D14694D00D1E017 /* Heapable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Heapable.h; sourceTree = "<group>"; };
 		F3866F951D1476CC00D1E017 /* HeapableCar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeapableCar.h; sourceTree = "<group>"; };
 		F3866F961D1476CC00D1E017 /* HeapableCar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeapableCar.m; sourceTree = "<group>"; };
 		F3866F991D1486B300D1E017 /* SinglyLinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SinglyLinkedList.h; sourceTree = "<group>"; };
 		F3866F9A1D1486B300D1E017 /* SinglyLinkedList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SinglyLinkedList.m; sourceTree = "<group>"; };
 		F3866F9C1D14887800D1E017 /* SinglyListable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SinglyListable.h; sourceTree = "<group>"; };
+		F3866F9E1D171BBE00D1E017 /* BinaryTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryTree.h; sourceTree = "<group>"; };
+		F3866F9F1D171BBE00D1E017 /* BinaryTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BinaryTree.m; sourceTree = "<group>"; };
+		F3866FA21D171C1A00D1E017 /* Treeable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Treeable.h; sourceTree = "<group>"; };
+		F3866FA31D183D3500D1E017 /* BinaryTreeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryTreeProtocol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,8 +100,8 @@
 				F3866F6A1D13735100D1E017 /* AppDelegate.m */,
 				F3866F6C1D13735100D1E017 /* ViewController.h */,
 				F3866F6D1D13735100D1E017 /* ViewController.m */,
+				F3866FA11D171BC500D1E017 /* Trees */,
 				F3866F9D1D14889500D1E017 /* LinkedList */,
-				F3866F981D14809800D1E017 /* Heaps */,
 				F3866F6F1D13735100D1E017 /* Main.storyboard */,
 				F3866F721D13735100D1E017 /* Assets.xcassets */,
 				F3866F741D13735100D1E017 /* LaunchScreen.storyboard */,
@@ -127,7 +131,6 @@
 		F3866F981D14809800D1E017 /* Heaps */ = {
 			isa = PBXGroup;
 			children = (
-				F3866F901D14694D00D1E017 /* Heapable.h */,
 				F3866F951D1476CC00D1E017 /* HeapableCar.h */,
 				F3866F961D1476CC00D1E017 /* HeapableCar.m */,
 				F3866F8B1D13736A00D1E017 /* BinaryHeap.h */,
@@ -144,6 +147,26 @@
 				F3866F9C1D14887800D1E017 /* SinglyListable.h */,
 			);
 			name = LinkedList;
+			sourceTree = "<group>";
+		};
+		F3866FA11D171BC500D1E017 /* Trees */ = {
+			isa = PBXGroup;
+			children = (
+				F3866F981D14809800D1E017 /* Heaps */,
+				F3866FA41D1870DA00D1E017 /* BaseClass */,
+			);
+			name = Trees;
+			sourceTree = "<group>";
+		};
+		F3866FA41D1870DA00D1E017 /* BaseClass */ = {
+			isa = PBXGroup;
+			children = (
+				F3866F9E1D171BBE00D1E017 /* BinaryTree.h */,
+				F3866F9F1D171BBE00D1E017 /* BinaryTree.m */,
+				F3866FA21D171C1A00D1E017 /* Treeable.h */,
+				F3866FA31D183D3500D1E017 /* BinaryTreeProtocol.h */,
+			);
+			name = BaseClass;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,6 +274,7 @@
 				F3866F681D13735100D1E017 /* main.m in Sources */,
 				F3866F8D1D13736A00D1E017 /* BinaryHeap.m in Sources */,
 				F3866F9B1D1486B300D1E017 /* SinglyLinkedList.m in Sources */,
+				F3866FA01D171BBE00D1E017 /* BinaryTree.m in Sources */,
 				F3866F971D1476CC00D1E017 /* HeapableCar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -442,6 +466,7 @@
 				F3866F871D13735100D1E017 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F3866F881D13735100D1E017 /* Build configuration list for PBXNativeTarget "DataStructuresTests" */ = {
 			isa = XCConfigurationList;
@@ -450,6 +475,7 @@
 				F3866F8A1D13735100D1E017 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

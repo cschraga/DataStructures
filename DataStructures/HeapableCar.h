@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Heapable.h"
+#import "Treeable.h"
+#import "SinglyListable.h"
 
-@interface HeapableCar : NSObject <Heapable>
+@interface HeapableCar : NSObject <Treeable, SinglyListable>
 
 @property (nonatomic, nonnull, strong) NSString *make;
 @property (nonatomic, nonnull, strong) NSString *model;

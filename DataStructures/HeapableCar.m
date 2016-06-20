@@ -8,6 +8,13 @@
 
 #import "HeapableCar.h"
 #import "Heapable.h"
+#import "SinglyListable.h"
+
+@interface HeapableCar ()
+
+@property (nullable, nonatomic, weak) NSObject *nextCar;
+
+@end
 
 @implementation HeapableCar
 
@@ -31,7 +38,7 @@
     return _msrp;
 }
 
-- (NSComparisonResult) compare:(NSObject *)otherObject {
+- (NSComparisonResult) compareTreeValueToObject: (NSObject *)otherObject {
     NSComparisonResult result = NSOrderedSame;
     
     if ([otherObject isKindOfClass:[HeapableCar class]]) {
@@ -40,6 +47,14 @@
     }
     
     return result;
+}
+
+- (void)assignNextNode:(NSObject *)object {
+    self.nextCar = object;
+}
+
+- (NSObject *) nextNode {
+    return self.nextCar;
 }
 
 + (HeapableCar *)carWithMake:(NSString *)make andModel:(NSString *)model andPrice:(NSNumber *)msrp {

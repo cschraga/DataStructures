@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @protocol SinglyListable <NSObject>
--(nonnull NSObject *)nextNode;
+-(nullable NSObject *)nextNode;
 -(void)assignNextNode: (nonnull NSObject *)object;
 @end

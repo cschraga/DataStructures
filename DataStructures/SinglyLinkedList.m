@@ -9,19 +9,27 @@
 #import "SinglyLinkedList.h"
 #import "SinglyListable.h"
 
+
 @implementation SinglyLinkedList
 
 - (id)init {
     self = [super init];
     if (self) {
-        _set = [NSMutableSet set];
+        _circular = false;
+    }
+    return self;
+}
+
+- (id)initWithCircular:(BOOL)circular {
+    self = [self init];
+    if (self) {
+        _circular = circular;
     }
     return self;
 }
 
 - (void) insertAtBeginning:(NSObject *)object {
     if ([object conformsToProtocol:@protocol(SinglyListable)]) {
-        [_set setByAddingObject:object];
         
         if (_firstNode) {
             NSObject <SinglyListable> *newNode = (NSObject <SinglyListable> *)object;
@@ -30,7 +38,14 @@
         
         _firstNode = object;
         
-        
+        if (_circular) {
+            if (_lastNode) {
+                NSObject <SinglyListable> *newLastNode = (NSObject <SinglyListable> *)_lastNode;
+                [newLastNode assignNextNode:_firstNode];
+            } else {
+                _lastNode = object;
+            }
+        }
     }
 }
 
@@ -48,11 +63,9 @@
             currentUncastNode = (!foundNode) ? nextNode : currentUncastNode;
         }
         
-        //2) if found, add it
+        //2) if found, then change the next items for newobject and current node
         if (foundNode) {
-            [_set addObject:object];
-            
-            //3) then change the next items for newobject and current node
+
             NSObject <SinglyListable>  *recastNewObj = (NSObject <SinglyListable> *)object;
             NSObject <SinglyListable>  *recastOldObj = (NSObject <SinglyListable> *)currentUncastNode;
             [recastNewObj assignNextNode:nextNode];
@@ -65,9 +78,18 @@
 - (NSObject *) popFirstNode {
     if (_firstNode) {
         NSObject <SinglyListable> *oldNode = (NSObject <SinglyListable> *) _firstNode;
-        [_set removeObject:_firstNode];
+
         _firstNode = [oldNode nextNode];
+        
+        if (_circular) {
+            if (_lastNode) {
+                NSObject <SinglyListable> *newLastNode = (NSObject <SinglyListable> *)_lastNode;
+                [newLastNode assignNextNode:_firstNode];
+            }
+        }
+        
         return  oldNode;
+        
     } else {
         return _firstNode;
     }
@@ -94,9 +116,6 @@
         NSObject <SinglyListable>  *recastFoundObj = (NSObject <SinglyListable> *)nextNode;
         NSObject *rememberNode = [recastFoundObj nextNode];
         
-        //4) then remove it
-        [_set removeObject:nextNode];
-        
         //5)then reassign current items node to #3
         NSObject <SinglyListable>  *recastCurrentObj = (NSObject <SinglyListable> *)currentUncastNode;
         [recastCurrentObj assignNextNode:rememberNode];
@@ -105,8 +124,9 @@
     
 }
 
-+ (SinglyLinkedList *) singlyLinkedList {
-    return [self init];
++ (SinglyLinkedList *) singlyLinkedListWithCircular:(BOOL)circular {
+    SinglyLinkedList *result = [[SinglyLinkedList alloc] initWithCircular:circular];
+    return result;
 }
 
 
